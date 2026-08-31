@@ -389,6 +389,7 @@ function uniqueModelOptions(models: string[]) {
 export function buildApiUrl(baseUrl: string, path: string) {
     const normalizedBaseUrl = baseUrl.trim().replace(/\/+$/, "");
     const lowerBaseUrl = normalizedBaseUrl.toLowerCase();
-    const apiBaseUrl = lowerBaseUrl.endsWith("/v1") ? normalizedBaseUrl : `${normalizedBaseUrl}/v1`;
+    // 若 baseUrl 末尾已包含 OpenAI 兼容版本段（如 /v1、/v3、/v1beta），则不再追加 /v1，避免覆盖用户显式配置。
+    const apiBaseUrl = /\/v\d+(?:beta)?$/.test(lowerBaseUrl) ? normalizedBaseUrl : `${normalizedBaseUrl}/v1`;
     return `${apiBaseUrl}${path}`;
 }
