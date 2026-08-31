@@ -200,7 +200,7 @@ if (images.length === 0) {
   // ${i18n.t("modelPlugin.templates.textToImage")}
   const data = await request({
     method: "post",
-    url: \`\${baseUrl}/v1/images/generations\`,
+    url: "/images/generations",
     headers: { "Content-Type": "application/json", Authorization: \`Bearer \${apiKey}\` },
     data: { model, prompt, n: params.count, size: params.size, response_format: "b64_json" },
   });
@@ -218,7 +218,7 @@ for (const dataUrl of images) {
 }
 const edited = await request({
   method: "post",
-  url: \`\${baseUrl}/v1/images/edits\`,
+  url: "/images/edits",
   headers: { Authorization: \`Bearer \${apiKey}\` }, // ${i18n.t("modelPlugin.templates.formDataHeader")}
   data: form,
 });
@@ -253,12 +253,12 @@ return (data.candidates || [])
 const headers = { "Content-Type": "application/json", Authorization: \`Bearer \${apiKey}\` };
 const task = await request({
   method: "post",
-  url: \`\${baseUrl}/v1/videos\`,
+  url: "/videos",
   headers,
   data: { model, prompt, seconds: params.seconds },
 });
 return await poll(
-  () => request({ method: "get", url: \`\${baseUrl}/v1/videos/\${task.id}\`, headers }),
+  () => request({ method: "get", url: \`/videos/\${task.id}\`, headers }),
   (state) => state.status === "completed" ? { url: state.video_url || state.url } : null,
   { intervalMs: 2500, timeoutMs: 300000 },
 );`,
@@ -295,7 +295,7 @@ return await poll(
             script: `// ${i18n.t("modelPlugin.templates.audioOpenai")}
 return await request({
   method: "post",
-  url: \`\${baseUrl}/v1/audio/speech\`,
+  url: "/audio/speech",
   headers: { "Content-Type": "application/json", Authorization: \`Bearer \${apiKey}\` },
   responseType: "blob",
   data: { model, input: prompt, voice: params.voice, response_format: params.format, speed: Number(params.speed) },
@@ -328,7 +328,7 @@ return { data: audio.data };`,
             script: `// ${i18n.t("modelPlugin.templates.textOpenai")}
 const data = await request({
   method: "post",
-  url: \`\${baseUrl}/v1/responses\`,
+  url: "/responses",
   headers: { "Content-Type": "application/json", Authorization: \`Bearer \${apiKey}\` },
   data: {
     model,
